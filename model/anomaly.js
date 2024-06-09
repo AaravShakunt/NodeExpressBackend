@@ -3,7 +3,23 @@ const { queryDatabase } = require('../config/db');
 class Anomaly {
     static async getAllPending() {
         try {
-            const query = 'SELECT * FROM anomalyLog WHERE status = ?';
+            // Select detailed information from anomalyLog and Entitlement tables
+            const query = `
+                SELECT 
+                    a.anomalyID,
+                    a.anomalyType,
+                    a.incorrectRiskTier,
+                    a.correctRiskTier,
+                    e.entID,
+                    e.entName,
+                    e.ownerID,
+                    e.permissions,
+                    e.riskTier,
+                    e.pbl
+                FROM anomalyLog a
+                JOIN Entitlement e ON a.entID = e.entID
+                WHERE a.status = ?`;
+            
             const anomalies = await queryDatabase(query, ['Open']);
             return anomalies;
         } catch (err) {
