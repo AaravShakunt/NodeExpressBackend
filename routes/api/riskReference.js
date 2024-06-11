@@ -3,6 +3,8 @@
 const express = require('express');
 const router = express.Router();
 const RiskReference = require('../../model/riskReference');
+const { getRiskReferencesForAnomaly } = require('../../controllers/riskReferenceController');
+
 
 // Fetch all entries from the riskReference table
 router.get('/', async (req, res) => {
@@ -28,5 +30,7 @@ router.put('/', async (req, res) => {
         res.status(500).json({ error: 'Failed to update risk tier' });
     }
 });
+
+router.get('/anomaly/:anomalyID', getRiskReferencesForAnomaly);
 
 module.exports = router;
